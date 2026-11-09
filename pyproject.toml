@@ -1,0 +1,16 @@
+[project]
+name = "comfyui-magik-text-concatenate"
+version = "1.0.0"
+description = 'Magik Text Concatenate'
+authors = [{name = "IA-gyz"}]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/IA-gyz/comfyui-magik-text-concatenate"
+
+[tool.comfy]
+PublisherId = "IA-gyz"
+DisplayName = "Magik Text Concatenate"
