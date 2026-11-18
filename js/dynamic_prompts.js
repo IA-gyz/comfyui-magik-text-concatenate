@@ -29,15 +29,15 @@ function resolveDynamicPrompt(text) {
 }
 
 app.registerExtension({
-    name: "Magik.TextConcatenate.DynamicPrompts",
+    name: "Magik.TextConcat.DynamicPrompts",
     nodeCreated(node) {
-        if (node.comfyClass !== "Magik_Text_Concatenate") return;
+        if (!["Magik_Text_3x_Concat", "Magik_Text_Concat"].includes(node.comfyClass)) return;
         for (const widget of node.widgets ?? []) {
             if (!["text1", "text2", "text3"].includes(widget.name)) continue;
             widget.dynamicPrompts = false;
             widget.serializeValue = (workflowNode, widgetIndex) => {
                 const toggle = node.widgets?.find(w => w.name === "Enable Dynamic Prompts");
-                const value = (toggle?.value ?? true)
+                const value = (toggle?.value ?? false)
                     ? resolveDynamicPrompt(widget.value) : widget.value;
                 if (workflowNode?.widgets_values) {
                     workflowNode.widgets_values[widgetIndex] = value;
