@@ -28,16 +28,24 @@ function resolveDynamicPrompt(text) {
     return read().value;
 }
 
+// Node ID -> default of the "Enable Dynamic Prompts" toggle.
+const NODES = {
+    "Magik_Text_Concat": false,
+    "Magik_Text_3x_Concat": false,
+    "Magik_Text_9x_Concat": true,
+};
+
 app.registerExtension({
     name: "Magik.TextConcat.DynamicPrompts",
     nodeCreated(node) {
-        if (!["Magik_Text_3x_Concat", "Magik_Text_Concat"].includes(node.comfyClass)) return;
+        if (!Object.prototype.hasOwnProperty.call(NODES, node.comfyClass)) return;
+        const toggleDefault = NODES[node.comfyClass];
         for (const widget of node.widgets ?? []) {
-            if (!["text1", "text2", "text3"].includes(widget.name)) continue;
+            if (!/^text\d+$/.test(widget.name)) continue;
             widget.dynamicPrompts = false;
             widget.serializeValue = (workflowNode, widgetIndex) => {
                 const toggle = node.widgets?.find(w => w.name === "Enable Dynamic Prompts");
-                const value = (toggle?.value ?? false)
+                const value = (toggle?.value ?? toggleDefault)
                     ? resolveDynamicPrompt(widget.value) : widget.value;
                 if (workflowNode?.widgets_values) {
                     workflowNode.widgets_values[widgetIndex] = value;
